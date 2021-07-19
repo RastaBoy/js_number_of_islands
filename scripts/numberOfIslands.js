@@ -1,8 +1,33 @@
 // Задача на кол-во островов
 
+function markAsExplored(row, column, grid) {
+    grid[row][column] = 2;
+    if(grid[row][column+1] === 1 && grid[row][column+1] !== undefined) {
+        markAsExplored(row, column+1, grid);
+    }
+    if(grid[row][column-1] === 1 && grid[row][column-1] !== undefined) {
+        markAsExplored(row, column-1, grid);
+    }
+    if(row > 0) {
+        if(grid[row-1][column] === 1) {
+            markAsExplored(row-1, column, grid);
+        }
+    }
+    if(row < grid.length-1) {
+        if(grid[row+1][column] === 1) {
+            markAsExplored(row+1, column, grid);
+        }
+    }
+}
+
 function numOfIslands(grid) {
     console.log(grid.length);
     let islandsCount = 0;
+    let ROWS = grid.length;
+
+    if(grid.length === 0) {
+        return 0;
+    }
     if(grid.length === 1) {
         grid = grid[0];
         for(let j = 0; j < grid.length; j++) {
@@ -14,36 +39,19 @@ function numOfIslands(grid) {
                 }
             }
         }
+        return islandsCount;
     } else {
-        // console.log('Много островов, наверное...');
-        for(let i = 0; i < grid.length; i++) {
+        // console.log('Много островов...');
+        for(let i = 0; i < ROWS; i++) {
             for(let j = 0; j < grid[i].length; j++) {
-                if(grid[i][j] === 1){
+                if(grid[i][j] === 1) {
+                    markAsExplored(i, j, grid);
                     islandsCount++;
-                    while(grid[i][j] === 1 && j < grid[i].length) {
-                        if(i == 0) {
-                            if(grid[i+1][j] === 1) {
-                                islandsCount--;
-                                break;
-                            }
-                        } else if(i === grid.length - 1) {
-                            if(grid[i-1][j] === 1) {
-                                islandsCount--;
-                                break;
-                            }
-                        } else {
-                            if(grid[i-1][j] === 1 || grid[i+1][j] === 1) {
-                                islandsCount--;
-                                break;
-                            }
-                        }
-                        j++;
-                    }
                 }
             }
         }
+        return islandsCount;
     }
-    console.log(islandsCount);
 }
 
 let grid_1 = [
@@ -51,13 +59,13 @@ let grid_1 = [
 ]
 
 let grid = [
+    [1, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 0, 1],
-    [1, 0, 1, 0, 0, 0],
-    [1, 1, 1, 0, 1, 1],
-    [1, 1, 0, 0, 0, 0]
+    [1, 0, 1, 1, 0, 1],
+    [1, 1, 1, 1, 1, 1]
 ]
 
-numOfIslands(grid);
+console.log(numOfIslands(grid));
 
 
 
